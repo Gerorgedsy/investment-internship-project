@@ -1,4 +1,4 @@
-import pandas as pd
+'''import pandas as pd
 import numpy as np
 
 
@@ -59,4 +59,59 @@ if __name__ == "__main__":
 
     print(qqq_data.head())
     print()
-    print(qqq_data.tail())
+    print(qqq_data.tail())'''
+
+import pandas as pd
+import yfinance as yf
+
+
+def fetch_qqq_data(
+    start_date="2015-01-01",
+    end_date="2025-01-01"
+):
+    """
+    Download real QQQ historical market data
+    from Yahoo Finance.
+    """
+
+    print("Downloading real QQQ data...")
+
+    data = yf.download(
+        "QQQ",
+        start=start_date,
+        end=end_date,
+        auto_adjust=False
+    )
+
+    if data.empty:
+        raise ValueError("No QQQ data downloaded.")
+
+    # Keep required columns
+    data = data[
+        [
+            "Open",
+            "High",
+            "Low",
+            "Close",
+            "Volume"
+        ]
+    ]
+
+    # Remove missing values
+    data = data.dropna()
+
+    print("QQQ data downloaded successfully.")
+    print(data.head())
+
+    return data
+
+
+if __name__ == "__main__":
+
+    qqq = fetch_qqq_data()
+
+    print("\nLast five rows:")
+    print(qqq.tail())
+
+    print("\nShape:")
+    print(qqq.shape)
